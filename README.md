@@ -33,8 +33,8 @@ Running:
     # Test1234!, password for the username.
     # All of the above should be passed as environment variables or fetched at run time in ideal circumstances, commandline switches present for testing and prototyping.
 
-For testing BMC power state, you can inspect `IpmiServerContext().bmc.powerstate`
-For more details see server usage `ipmisim/ipmisim.py`
+Updated make file to use python 3 although this should probably be set through the path instead. 
+If you want to test on 623 the default ipmi port then you may have to adjust permissions on the destination system. 
 
 Testing with ipmitool:
 
