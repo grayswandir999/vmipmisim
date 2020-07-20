@@ -1,11 +1,9 @@
-# ipmisim
+# vmipmisim
 
 A fake ipmi server for testing purposes both as a tool and a library.
 The code is forked from [Conpot](http://conpot.org/) and based on `pyghmi`.
 
-![version badge](https://badge.fury.io/py/ipmisim.png) ![download badge](http://img.shields.io/pypi/dm/ipmisim.png)
-
-This was created for testing IPMI related features in [Apache CloudStack](http://cloudstack.apache.org).
+This fork called vmipmisim is targeted at the goal of enabling testing IPMI workflows with vm infrastructure.
 
 The tool ships with default sets of users for ease of use:
 
@@ -22,11 +20,11 @@ The default passwords are:
 
 Installation:
 
-    pip install --upgrade ipmisim
+Work in progress
 
 Running:
 
-    ipmisim 3000  # Runs on custom port 3000, else 9001 by default
+    ipmisim 3000 testvm01 vmware vcsa01.dev.local administrator@vsphere.local Test1234! # Runs on custom port 3000, else 9001 by default
 
 For, usage in integration tests you can import the server module and create a server:
 
