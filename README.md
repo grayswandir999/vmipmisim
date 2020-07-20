@@ -22,18 +22,16 @@ Installation:
 
 Work in progress
 
-Running:
+Running: 
 
-    ipmisim 3000 testvm01 vmware vcsa01.dev.local administrator@vsphere.local Test1234! # Runs on custom port 3000, else 9001 by default
-
-For, usage in integration tests you can import the server module and create a server:
-
-    from ipmisim.ipmisim import IpmiServer
-    import socketserver
-
-    port = 3000
-    server = SocketServer.UDPServer(('0.0.0.0', port), IpmiServer)
-    server.serve_forever()
+    ipmisim 3000 testvm01 vmware vcsa01.dev.local administrator@vsphere.local Test1234! 
+    # Runs on custom port 3000, else 9001 by default
+    # Performs IPMI action on testvm01
+    # VM type of VMware, libvirt, hyperv so know what type of infrastructure to connect to. Hyperv and libvirt are work ing progress
+    # vcsa01.dev.local the vcenter or other management host with api to connect to, should work with esxi host directly also.
+    # administrator@vsphere.local, username to conenct to infrastructure with
+    # Test1234!, password for the username.
+    # All of the above should be passed as environment variables or fetched at run time in ideal circumstances, commandline switches present for testing and prototyping.
 
 For testing BMC power state, you can inspect `IpmiServerContext().bmc.powerstate`
 For more details see server usage `ipmisim/ipmisim.py`
