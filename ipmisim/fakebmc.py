@@ -16,12 +16,40 @@
 # Brno University of Technology, Faculty of Information Technology
 
 import logging
+import sys
+import time
+import time
+import atexit
+import argparse
+from pyVmomi import vim, vmodl
+from pyVim import connect
+from pyVim.connect import Disconnect, SmartConnect, GetSi
+import ssl
 
 from pyghmi.ipmi.bmc import Bmc
 
-
 logger = logging.getLogger('ipmisim')
 
+inputs = {'vcenter_ip': '192.168.255.20',
+  'vcenter_password': 'Test1234!',
+  'vcenter_user': 'administrator@vsphere.local',
+  'vm_name' : 'test01',
+  'operation' : 'stop',
+  'force' : True,
+  }
+
+def get_obj(content, vimtype, name):
+    objct = None
+    container = content.viewManager.CreateContainerView(content.rootFolder, vimtype, True)
+    for c in container.view:
+        if c.name == name:
+            objct = c
+            break
+    return objct
+
+si = connect.SmartConnectNoSSL(host=inputs['vcenter_ip'],port=443,user=inputs['vcenter_user'],pwd=inputs['vcenter_password'])
+content = si.RetrieveContent()
+vm = get_obj(content, [vim.VirtualMachine], inputs['vm_name'])
 
 class FakeBmc(Bmc):
 
@@ -40,6 +68,8 @@ class FakeBmc(Bmc):
         self.powerstate = 'off'
         self.bootdevice = 'default'
         logger.info('IPMI BMC initialized.')
+
+
 
     def get_boot_device(self):
         logger.info('IPMI BMC Get_Boot_Device request.')
@@ -60,10 +90,15 @@ class FakeBmc(Bmc):
 
     def power_off(self):
         logger.info('IPMI BMC Power_Off request.')
+
         self.powerstate = 'off'
 
     def power_on(self):
         logger.info('IPMI BMC Power_On request.')
+#        si = connect.SmartConnectNoSSL(host=inputs['vcenter_ip'],port=443,user=inputs['vcenter_user'],pwd=inputs['vcenter_password'])
+#        content = si.RetrieveContent()
+#        vm = get_obj(content, [vim.VirtualMachine], inputs['vm_name'])
+        vm.PowerOnVM_Task()
         self.powerstate = 'on'
 
     def power_reset(self):

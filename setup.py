@@ -26,6 +26,8 @@ requires = [
               'pyghmi==1.2.16',
               'future==0.18.2',
               'pycrypto==2.6.1',
+              'pyVmomi==7.0',
+              'urllib3==1.25.9',
             ]
 
 setup(
