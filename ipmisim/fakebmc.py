@@ -77,6 +77,29 @@ class FakeBmc(Bmc):
 
     def set_boot_device(self, bootdevice):
         logger.info('IPMI BMC Set_Boot_Device request.')
+        logger.info(bootdevice)
+        if bootdevice == 'network':
+            bn = vim.option.OptionValue(key='bios.bootDeviceClasses',value='allow:net')
+            vmconf = vim.vm.ConfigSpec()
+            vmconf.extraConfig = [bn]
+            vm.ReconfigVM_Task(vmconf)
+        elif bootdevice == 'optical':
+            bn = vim.option.OptionValue(key='bios.bootDeviceClasses',value='allow:cd,hd,fd,net')
+            vmconf = vim.vm.ConfigSpec()
+            vmconf.extraConfig = [bn]
+            vm.ReconfigVM_Task(vmconf)
+        elif bootdevice == 'floppy':
+            bn = vim.option.OptionValue(key='bios.bootDeviceClasses',value='allow:fd,cd,hd,net')
+            vmconf = vim.vm.ConfigSpec()
+            vmconf.extraConfig = [bn]
+            vm.ReconfigVM_Task(vmconf)
+        elif bootdevice == 'hd':
+            bn = vim.option.OptionValue(key='bios.bootDeviceClasses',value='allow:hd,cd,fd,net')
+            vmconf = vim.vm.ConfigSpec()
+            vmconf.extraConfig = [bn]
+            vm.ReconfigVM_Task(vmconf)
+        else:
+            logger.info(bootdevice)
         self.bootdevice = bootdevice
 
     def cold_reset(self):
@@ -90,28 +113,27 @@ class FakeBmc(Bmc):
 
     def power_off(self):
         logger.info('IPMI BMC Power_Off request.')
-
+        vm.PowerOff()
         self.powerstate = 'off'
 
     def power_on(self):
         logger.info('IPMI BMC Power_On request.')
-#        si = connect.SmartConnectNoSSL(host=inputs['vcenter_ip'],port=443,user=inputs['vcenter_user'],pwd=inputs['vcenter_password'])
-#        content = si.RetrieveContent()
-#        vm = get_obj(content, [vim.VirtualMachine], inputs['vm_name'])
         vm.PowerOnVM_Task()
         self.powerstate = 'on'
 
     def power_reset(self):
         logger.info('IPMI BMC Power_Reset request.')
-        # warm boot
+        vm.ResetVM_Task()
         self.powerstate = 'on'
 
     def power_cycle(self):
         logger.info('IPMI BMC Power_Cycle request.')
         # cold boot
+        vm.ResetVM_Task()
         self.powerstate = 'off'
         self.powerstate = 'on'
 
     def power_shutdown(self):
         logger.info('IPMI BMC Power_Shutdown request.')
+        vm.RebootGuest()
         self.powerstate = 'off'

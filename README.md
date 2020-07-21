@@ -39,3 +39,8 @@ If you want to test on 623 the default ipmi port then you may have to adjust per
 Testing with ipmitool:
 
     ipmitool -I lanplus -H localhost -p 9001 -R1 -U admin -P password chassis power status
+
+Other Notes:
+
+    When using pyvmomi ensure the most recent version of requests is installed, can cause errors related to urllib3 if mismatch
+    pip3 install --upgrade requests
